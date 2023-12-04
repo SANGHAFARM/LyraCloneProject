@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\lyraclone\\game\\lyraclone\\plugins\\gamefeatures\\shootercore\\source\\shootercoreruntime\\private\\shootercoreruntimemodule.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\lyraclone\\engine\\intermediate\\build\\win64\\unrealeditor\\development\\engine\\sharedpch.engine.nonoptimized.shadowerrors.h.pch",
+        "Includes": [
+            "e:\\lyraclone\\game\\lyraclone\\plugins\\gamefeatures\\shootercore\\intermediate\\build\\win64\\unrealeditor\\debuggame\\shootercoreruntime\\definitions.shootercoreruntime.h",
+            "e:\\lyraclone\\game\\lyraclone\\plugins\\gamefeatures\\shootercore\\source\\shootercoreruntime\\public\\shootercoreruntimemodule.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
