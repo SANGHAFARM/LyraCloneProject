@@ -18,9 +18,11 @@ public class LyraClone : ModuleRules
 			// Game Features
 			"ModularGameplay",
 			"GameFeatures",
+			"ModularGameplayActors",
 			// Input
 			"InputCore",
 			"EnhancedInput",
+			// CommonUser
 			"CommonUser"
 		});
 

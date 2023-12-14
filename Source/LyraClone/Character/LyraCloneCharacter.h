@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameFramework/Character.h"
+#include "ModularCharacter.h"
 
 #include "LyraCloneCharacter.generated.h"
 
@@ -8,7 +8,7 @@ class ULyraClonePawnExtensionComponent;
 class ULyraCloneCameraComponent;
 
 UCLASS()
-class ALyraCloneCharacter : public ACharacter
+class ALyraCloneCharacter : public AModularCharacter
 {
 	GENERATED_BODY()
 public:
