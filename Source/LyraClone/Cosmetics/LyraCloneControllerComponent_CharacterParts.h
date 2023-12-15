@@ -5,6 +5,8 @@
 
 #include "LyraCloneControllerComponent_CharacterParts.generated.h"
 
+class ULyraClonePawnComponent_CharacterParts;
+
 USTRUCT()
 struct FLyraCloneControllerCharacterPartEntry
 {
@@ -25,6 +27,12 @@ class ULyraCloneControllerComponent_CharacterParts : public UControllerComponent
 
 public:
 	ULyraCloneControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	ULyraClonePawnComponent_CharacterParts* GetPawnCustomizer() const;
+	void AddCharacterPartInternal(const FLyraCloneCharacterPart& NewPart);
+
+	UFUNCTION(BlueprintCallable, Category = Cosmetics)
+	void AddCharacterPart(const FLyraCloneCharacterPart& NewPart);
 
 	UPROPERTY(EditAnywhere, Category = Cosmetics)
 	TArray<FLyraCloneControllerCharacterPartEntry> CharacterParts;
