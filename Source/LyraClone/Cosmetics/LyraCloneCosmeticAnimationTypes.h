@@ -23,6 +23,8 @@ struct FLyraCloneAnimBodyStyleSelectionSet
 {
 	GENERATED_BODY()
 
+	USkeletalMesh* SelectBestBodyStyle(const FGameplayTagContainer& CosmeticTags) const;
+
 	// List of layer rules to apply, first one that matches will be used
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FLyraCloneAnimBodyStyleSelectionEntry> MeshRules;
@@ -34,5 +36,5 @@ struct FLyraCloneAnimBodyStyleSelectionSet
 	// If set, ensures this physics asset is always used
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UPhysicsAsset> ForcedPhysicsAsset = nullptr;
-
+	
 };

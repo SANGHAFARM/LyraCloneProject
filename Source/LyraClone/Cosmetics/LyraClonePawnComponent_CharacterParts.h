@@ -43,9 +43,13 @@ struct FLyraCloneCharacterPartList
 	{
 	}
 
+	FGameplayTagContainer CollectCombinedTags() const;
+
 	FLyraCloneCharacterPartHandle AddEntry(FLyraCloneCharacterPart NewPart);
+	void RemoveEntry(FLyraCloneCharacterPartHandle Handle);
 
 	bool SpawnActorForEntry(FLyraCloneAppliedCharacterPartEntry& Entry);
+	void DestroyActorForEntry(FLyraCloneAppliedCharacterPartEntry& Entry);
 
 	// Replicated list of equipment entries
 	UPROPERTY()
@@ -67,7 +71,16 @@ class ULyraClonePawnComponent_CharacterParts : public UPawnComponent
 public:
 	ULyraClonePawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 		
+	USkeletalMeshComponent* GetParentMeshComponent() const;
+	USceneComponent* GetSceneComponentToAttachTo() const;
+
+	FGameplayTagContainer GetCombinedTags(FGameplayTag RequiredPrefix) const;
+
+	void BroadcastChanged();
+
 	FLyraCloneCharacterPartHandle AddCharacterPart(const FLyraCloneCharacterPart& NewPart);
+
+	void RemoveCharacterPart(FLyraCloneCharacterPartHandle Handle);
 
 	// List of character parts
 	UPROPERTY()
