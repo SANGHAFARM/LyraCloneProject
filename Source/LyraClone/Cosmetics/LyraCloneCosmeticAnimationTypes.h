@@ -38,3 +38,27 @@ struct FLyraCloneAnimBodyStyleSelectionSet
 	TObjectPtr<UPhysicsAsset> ForcedPhysicsAsset = nullptr;
 	
 };
+
+USTRUCT(BlueprintType)
+struct FLyraCloneAnimLayerSelectionEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> Layer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTagContainer RequiredTags;
+};
+
+USTRUCT(BlueprintType)
+struct FLyraCloneAnimLayerSelectionSet
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FLyraCloneAnimLayerSelectionEntry> LayerRules;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> DefaultLayer;
+};

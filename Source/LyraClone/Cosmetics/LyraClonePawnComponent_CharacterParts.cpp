@@ -103,7 +103,7 @@ void FLyraCloneCharacterPartList::RemoveEntry(FLyraCloneCharacterPartHandle Hand
 }
 
 ULyraClonePawnComponent_CharacterParts::ULyraClonePawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer), CharacterPartList(this)
 {
 
 }

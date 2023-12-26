@@ -28,11 +28,19 @@ class ULyraCloneControllerComponent_CharacterParts : public UControllerComponent
 public:
 	ULyraCloneControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;	
+
 	ULyraClonePawnComponent_CharacterParts* GetPawnCustomizer() const;
 	void AddCharacterPartInternal(const FLyraCloneCharacterPart& NewPart);
 
 	UFUNCTION(BlueprintCallable, Category = Cosmetics)
 	void AddCharacterPart(const FLyraCloneCharacterPart& NewPart);
+
+	void RemoveAllCharacterParts();
+
+	UFUNCTION()
+	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
 
 	UPROPERTY(EditAnywhere, Category = Cosmetics)
 	TArray<FLyraCloneControllerCharacterPartEntry> CharacterParts;
