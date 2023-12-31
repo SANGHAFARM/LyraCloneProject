@@ -5,6 +5,7 @@
 #include "LyraCloneInventoryManagerComponent.generated.h"
 
 class ULyraCloneInventoryItemInstance;
+class ULyraCloneInventoryItemDefinition;
 
 /** Inventory Item 단위 객체 */
 USTRUCT(BlueprintType)
@@ -27,6 +28,8 @@ struct FLyraCloneInventoryList
 	{
 	}
 
+	ULyraCloneInventoryItemInstance* AddEntry(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef);
+
 	UPROPERTY()
 	TArray<FLyraCloneInventoryEntry> Entries;
 
@@ -44,6 +47,10 @@ class ULyraCloneInventoryManagerComponent : public UActorComponent
 public:
 	ULyraCloneInventoryManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	ULyraCloneInventoryItemInstance* AddItemDefinition(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef);
+
 	UPROPERTY()
 	FLyraCloneInventoryList InventoryList;
+
 };

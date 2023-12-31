@@ -5,7 +5,8 @@
 
 #include "LyraCloneInventoryItemInstance.generated.h"
 
-class ULyraCloneInventoryItemInstance;
+class ULyraCloneInventoryItemFragment;
+class ULyraCloneInventoryItemDefinition;
 
 UCLASS(BlueprintType)
 class ULyraCloneInventoryItemInstance : public UObject
@@ -15,6 +16,14 @@ class ULyraCloneInventoryItemInstance : public UObject
 public:
 	ULyraCloneInventoryItemInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	const ULyraCloneInventoryItemFragment* FindFragmentByClass(TSubclassOf<ULyraCloneInventoryItemFragment> FragmentClass) const;
+
+	template <typename ResultClass>	
+	const ResultClass* FindFragmentByClass() const
+	{
+		return (ResultClass*)FindFragmentByClass(ResultClass::StaticClass());
+	}
+
 	UPROPERTY()
-	TSubclassOf<ULyraCloneInventoryItemInstance> ItemDef;
+	TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef;
 };

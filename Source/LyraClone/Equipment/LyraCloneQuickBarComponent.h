@@ -16,6 +16,18 @@ class ULyraCloneQuickBarComponent : public UControllerComponent
 public:
 	ULyraCloneQuickBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemToSlot(int32 SlotIndex, ULyraCloneInventoryItemInstance* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "LyraClone")
+	void SetActiveSlotIndex(int32 NewIndex);
+
+	ULyraCloneEquipmentManagerComponent* FindEquipmentManager() const;
+	void UnequipItemInSlot();
+	void EquipItemInSlot();
+
 	UPROPERTY()
 	int32 NumSlots = 3;
 

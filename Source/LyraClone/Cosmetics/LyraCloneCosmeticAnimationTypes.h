@@ -24,7 +24,7 @@ struct FLyraCloneAnimBodyStyleSelectionSet
 	GENERATED_BODY()
 
 	USkeletalMesh* SelectBestBodyStyle(const FGameplayTagContainer& CosmeticTags) const;
-
+	
 	// List of layer rules to apply, first one that matches will be used
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FLyraCloneAnimBodyStyleSelectionEntry> MeshRules;
@@ -55,6 +55,8 @@ USTRUCT(BlueprintType)
 struct FLyraCloneAnimLayerSelectionSet
 {
 	GENERATED_BODY()
+
+	TSubclassOf<UAnimInstance> SelectBestLayer(const FGameplayTagContainer& CosmeticTags) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FLyraCloneAnimLayerSelectionEntry> LayerRules;
