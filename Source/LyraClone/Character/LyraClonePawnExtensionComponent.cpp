@@ -1,7 +1,9 @@
 #include "LyraClonePawnExtensionComponent.h"
+
 #include "LyraClone/LyraCloneLogChannels.h"
 #include "LyraClone/LyraCloneGameplayTags.h"
 #include "Components/GameFrameworkComponentManager.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySystemComponent.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraClonePawnExtensionComponent)
 
@@ -126,4 +128,39 @@ void ULyraClonePawnExtensionComponent::SetPawnData(const ULyraClonePawnData* InP
 void ULyraClonePawnExtensionComponent::SetupPlayerInputComponent()
 {
 	CheckDefaultInitialization();
+}
+
+void ULyraClonePawnExtensionComponent::InitializeAbilitySystem(ULyraCloneAbilitySystemComponent* InASC, AActor* InOwnerActor)
+{
+	check(InASC && InOwnerActor);
+	
+	if (AbilitySystemComponent == InASC)
+	{
+		// The ability system component hasn't changed.
+		return;
+	}
+
+	if (AbilitySystemComponent)
+	{
+		// Clean up the old ability system component.
+		UninitializeAbilitySystem();
+	}
+
+	APawn* Pawn = GetPawnChecked<APawn>();
+	AActor* ExistingAvatar = InASC->GetAvatarActor();
+	check(!ExistingAvatar);
+
+	// ASC를 업데이트하고, InitAbilityActorInfo를 Pawn과 같이 호출하여, AvatarActor를 Pawn으로 업데이트 해준다
+	AbilitySystemComponent = InASC;
+	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
+}
+
+void ULyraClonePawnExtensionComponent::UninitializeAbilitySystem()
+{
+	if (!AbilitySystemComponent)
+	{
+		return;
+	}
+
+	AbilitySystemComponent = nullptr;
 }

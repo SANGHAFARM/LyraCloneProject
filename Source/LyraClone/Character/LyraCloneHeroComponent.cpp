@@ -117,10 +117,15 @@ void ULyraCloneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManag
 		if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 		{
 			PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>();
+
+			// DataInitialized 단계까지 오면, Pawn이 Controller에 Possess되어 준비된 상태,
+			// - InitAbilityActorInfo 호출로 AvatarActor 재설정이 필요.
+			PawnExtComp->InitializeAbilitySystem(PS->GetLyraCloneAbilitySystemComponent(), PS);
 		}
 
 		if (bIsLocallyControlled && PawnData)
 		{
+			// 현재 LyraCloneCharacter에 Attach된 CameraComponent를 찾음
 			if (ULyraCloneCameraComponent* CameraComponent = ULyraCloneCameraComponent::FindCameraComponent(Pawn))
 			{
 				CameraComponent->DetermineCameraModeDelegate.BindUObject(this, &ThisClass::DetermineCameraMode);

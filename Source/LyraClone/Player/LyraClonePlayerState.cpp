@@ -1,14 +1,17 @@
 #include "LyraClonePlayerState.h"
+
 #include "LyraClone/GameModes/LyraCloneExperienceDefinition.h"
 #include "LyraClone/GameModes/LyraCloneExperienceManagerComponent.h"
 #include "LyraClone/GameModes/LyraCloneGameMode.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySystemComponent.h"
+
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraClonePlayerState)
 
 PRAGMA_DISABLE_OPTIMIZATION
 ALyraClonePlayerState::ALyraClonePlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<ULyraCloneAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 }
 PRAGMA_ENABLE_OPTIMIZATION
 
