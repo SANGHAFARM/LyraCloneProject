@@ -1,6 +1,8 @@
 #include "LyraCloneCharacter.h"
+
 #include "LyraClonePawnExtensionComponent.h"
 #include "LyraClone/Camera/LyraCloneCameraComponent.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySystemComponent.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneCharacter)
 
@@ -21,4 +23,9 @@ void ALyraCloneCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PawnExtComponent->SetupPlayerInputComponent();
+}
+
+UAbilitySystemComponent* ALyraCloneCharacter::GetAbilitySystemComponent() const
+{
+	return PawnExtComponent->GetLyraCloneAbilitySystemComponent();
 }

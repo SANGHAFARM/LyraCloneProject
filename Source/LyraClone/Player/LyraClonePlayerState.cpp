@@ -4,6 +4,8 @@
 #include "LyraClone/GameModes/LyraCloneExperienceManagerComponent.h"
 #include "LyraClone/GameModes/LyraCloneGameMode.h"
 #include "LyraClone/AbilitySystem/LyraCloneAbilitySystemComponent.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySet.h"
+#include "LyraClone/Character/LyraClonePawnData.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraClonePlayerState)
 
@@ -42,8 +44,14 @@ void ALyraClonePlayerState::OnExperienceLoaded(const ULyraCloneExperienceDefinit
 void ALyraClonePlayerState::SetPawnData(const ULyraClonePawnData* InPawnData)
 {
 	check(InPawnData);
-
 	check(!PawnData);
-
 	PawnData = InPawnData;
+
+	for (ULyraCloneAbilitySet* AbilitySet : PawnData->AbilitySets)
+	{
+		if (AbilitySet)
+		{
+			AbilitySet->GiveToAbilitySystem(AbilitySystemComponent, nullptr);
+		}
+	}
 }

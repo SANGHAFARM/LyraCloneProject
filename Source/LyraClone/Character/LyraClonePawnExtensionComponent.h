@@ -2,6 +2,7 @@
 
 #include "Components/PawnComponent.h"
 #include "Components/GameFrameworkInitStateInterface.h"
+
 #include "LyraClonePawnExtensionComponent.generated.h"
 
 class ULyraClonePawnData;
@@ -34,6 +35,8 @@ public:
 	void SetupPlayerInputComponent();
 	void InitializeAbilitySystem(ULyraCloneAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	void UninitializeAbilitySystem();
+
+	ULyraCloneAbilitySystemComponent* GetLyraCloneAbilitySystemComponent() const { return AbilitySystemComponent; }
 
 	UPROPERTY(EditInstanceOnly, Category = "LyraClone|Pawn")
 	TObjectPtr<const ULyraClonePawnData> PawnData;

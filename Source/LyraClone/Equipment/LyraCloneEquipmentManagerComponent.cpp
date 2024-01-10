@@ -1,6 +1,9 @@
 #include "LyraCloneEquipmentManagerComponent.h"
+
 #include "LyraCloneEquipmentDefinition.h"
 #include "LyraCloneEquipmentInstance.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneEquipmentManagerComponent)
 
@@ -42,7 +45,6 @@ ULyraCloneEquipmentInstance* FLyraCloneEquipmentList::AddEntry(TSubclassOf<ULyra
 	check(OwnerComponent->GetOwner()->HasAuthority());
 
 	const ULyraCloneEquipmentDefinition* EquipmentCDO =	GetDefault<ULyraCloneEquipmentDefinition>(EquipmentDefinition);
-
 	TSubclassOf<ULyraCloneEquipmentInstance> InstanceType = EquipmentCDO->InstanceType;
 	if (!InstanceType)
 	{
@@ -53,8 +55,16 @@ ULyraCloneEquipmentInstance* FLyraCloneEquipmentList::AddEntry(TSubclassOf<ULyra
 	NewEntry.EquipmentDefinition = EquipmentDefinition;
 	NewEntry.Instance = NewObject<ULyraCloneEquipmentInstance>(OwnerComponent->GetOwner(), InstanceType);
 	Result = NewEntry.Instance;
-
 	Result->SpawnEquipmentActors(EquipmentCDO->ActorsToSpawn);
+
+	ULyraCloneAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	check(ASC);
+	{
+		for (TObjectPtr<ULyraCloneAbilitySet> AbilitySet : EquipmentCDO->AbilitySetsToGrant)
+		{
+			AbilitySet->GiveToAbilitySystem(ASC, &NewEntry.GrantedHandles, Result);
+		}
+	}
 
 	return Result;
 }
@@ -66,8 +76,22 @@ void FLyraCloneEquipmentList::RemoveEntry(ULyraCloneEquipmentInstance* Instance)
 		FLyraCloneAppliedEquipmentEntry& Entry = *EntryIt;
 		if (Entry.Instance == Instance)
 		{
+			ULyraCloneAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+			check(ASC);
+			{
+				Entry.GrantedHandles.TakeFromAbilitySystem(ASC);
+			}
+
 			Instance->DestroyEquipmentActors();
 			EntryIt.RemoveCurrent();
 		}
 	}
+}
+
+ULyraCloneAbilitySystemComponent* FLyraCloneEquipmentList::GetAbilitySystemComponent() const
+{
+	check(OwnerComponent);
+	AActor* OwningActor = OwnerComponent->GetOwner();
+
+	return Cast<ULyraCloneAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }

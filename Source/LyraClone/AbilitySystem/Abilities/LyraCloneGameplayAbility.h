@@ -4,6 +4,14 @@
 
 #include "LyraCloneGameplayAbility.generated.h"
 
+UENUM(BlueprintType)
+enum class ELyraCloneAbilityActivationPolicy : uint8
+{
+	OnInputTriggered,
+	WhileInputActive,
+	OnSpawn,
+};
+
 UCLASS(Abstract)
 class ULyraCloneGameplayAbility : public UGameplayAbility
 {
@@ -11,4 +19,7 @@ class ULyraCloneGameplayAbility : public UGameplayAbility
 
 public:
 	ULyraCloneGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|AbilityActivation")
+	ELyraCloneAbilityActivationPolicy ActivationPolicy;
 };

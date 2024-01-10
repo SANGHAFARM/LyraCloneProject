@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/PawnComponent.h"
+#include "LyraClone/AbilitySystem/LyraCloneAbilitySet.h"
 
 #include "LyraCloneEquipmentManagerComponent.generated.h"
 
@@ -18,6 +19,8 @@ struct FLyraCloneAppliedEquipmentEntry
 	UPROPERTY()
 	TObjectPtr<ULyraCloneEquipmentInstance> Instance = nullptr;
 
+	UPROPERTY()
+	FLyraCloneAbilitySet_GrantedHandles GrantedHandles;
 };
 
 USTRUCT(BlueprintType)
@@ -32,6 +35,8 @@ struct FLyraCloneEquipmentList
 
 	ULyraCloneEquipmentInstance* AddEntry(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition);
 	void RemoveEntry(ULyraCloneEquipmentInstance* Instance);
+
+	ULyraCloneAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	UPROPERTY()
 	TArray<FLyraCloneAppliedEquipmentEntry> Entries;

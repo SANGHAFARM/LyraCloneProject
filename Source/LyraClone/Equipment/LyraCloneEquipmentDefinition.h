@@ -55,4 +55,7 @@ public:
 	// Actors to spawn on the pawn when this is equipped
 	UPROPERTY(EditDefaultsOnly, Category = Equipment)
 	TArray<FLyraCloneEquipmentActorToSpawn> ActorsToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = Equipment)
+	TArray<TObjectPtr<ULyraCloneAbilitySet>> AbilitySetsToGrant;
 };

@@ -33,6 +33,20 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FLyraCloneAbilitySet_GrantedHandles
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
+
+	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle);
+
+	void TakeFromAbilitySystem(ULyraCloneAbilitySystemComponent* LyraCloneASC);
+};
+
 /** Gameplay Ability를 좀 더 쉽게 관리하기 위한 Set */
 UCLASS(BlueprintType)
 class ULyraCloneAbilitySet : public UPrimaryDataAsset
@@ -44,4 +58,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Abilities")
 	TArray<FLyraCloneAbilitySet_GameplayAbility> GrantedGameplayAbilities;
+
+	void GiveToAbilitySystem(ULyraCloneAbilitySystemComponent* LyraCloneASC, FLyraCloneAbilitySet_GrantedHandles* OutGrantedHandles, UObject* SourceObject = nullptr);
 };
