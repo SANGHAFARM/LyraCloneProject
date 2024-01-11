@@ -15,4 +15,7 @@ class ULyraCloneGameplayAbility_FromEquipment : public ULyraCloneGameplayAbility
 
 public:
 	ULyraCloneGameplayAbility_FromEquipment(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	ULyraCloneEquipmentInstance* GetAssociatedEquipment() const;
+
 };

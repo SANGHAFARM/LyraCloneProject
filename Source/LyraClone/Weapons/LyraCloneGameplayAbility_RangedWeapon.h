@@ -5,11 +5,51 @@
 
 #include "LyraCloneGameplayAbility_RangedWeapon.generated.h"
 
+class ULyraCloneRangedWeaponInstance;
+
+UENUM(BlueprintType)
+enum class ELyraCloneAbilityTargetingSource : uint8
+{
+	CameraTowardsFocus,
+};
+
 UCLASS()
 class ULyraCloneGameplayAbility_RangedWeapon : public ULyraCloneGameplayAbility_FromEquipment
 {
 	GENERATED_BODY()
+
 public:
+	struct FRangedWeaponFiringInput
+	{
+		FVector StartTrace;
+		FVector EndAim;
+		FVector AimDir;
+		ULyraCloneRangedWeaponInstance* WeaponData = nullptr;
+		bool bCanPlayBulletFX = false;
+
+		FRangedWeaponFiringInput() : StartTrace(ForceInitToZero), EndAim(ForceInitToZero), AimDir(ForceInitToZero)
+		{}
+	};
 
 	ULyraCloneGameplayAbility_RangedWeapon(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
+	UFUNCTION(BlueprintCallable)
+	void StartRangedWeaponTargeting();
+
+	void PerformLocalTargeting(TArray<FHitResult>& OutHits);
+
+	void TraceBulletsInCartridge(const FRangedWeaponFiringInput& InputData, TArray<FHitResult>& OutHits);
+
+	FHitResult DoSingleBulletTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHits) const;
+
+	int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults);
+
+	FHitResult WeaponTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHitResults) const;
+
+	void AddAdditionalTraceIgnoreActors(FCollisionQueryParams& TraceParams) const;
+	ECollisionChannel DetermineTraceChannel(FCollisionQueryParams& TraceParams, bool bIsSimulated) const;
+
+	ULyraCloneRangedWeaponInstance* GetWeaponInstance();
+	FVector GetWeaponTargetingSourceLocation() const;
+	FTransform GetTargetingTransform(APawn* SourcePawn, ELyraCloneAbilityTargetingSource Source);
 };
