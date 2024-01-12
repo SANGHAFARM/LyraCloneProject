@@ -1,43 +1,15 @@
 #include "LyraCloneGameplayAbility_RangedWeapon.h"
 
+#include "AbilitySystemComponent.h"
 #include "LyraCloneRangedWeaponInstance.h"
+#include "LyraClone/Physics/LyraCloneCollisionChannels.h"
+#include "LyraClone/AbilitySystem/LyraCloneGameplayAbilityTargetData_SingleTarget.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneGameplayAbility_RangedWeapon)
 
 ULyraCloneGameplayAbility_RangedWeapon::ULyraCloneGameplayAbility_RangedWeapon(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {}
-
-void ULyraCloneGameplayAbility_RangedWeapon::StartRangedWeaponTargeting()
-{
-	check(CurrentActorInfo);
-
-	AActor* AvatarActor = CurrentActorInfo->AvatarActor.Get();
-	check(AvatarActor);
-
-	UAbilitySystemComponent* MyAbilityComponent = CurrentActorInfo->AbilitySystemComponent.Get();
-	check(MyAbilityComponent);
-
-	TArray<FHitResult> FoundHits;
-	PerformLocalTargeting(FoundHits);
-
-	FGameplayAbilityTargetDataHandle TargetData;
-	TargetData.UniqueId = 0;
-
-	if (FoundHits.Num() > 0)
-	{
-		const int32 CartridgeID = FMath::Rand();
-		for (const FHitResult& FoundHit : FoundHits)
-		{
-			FLyraCloneGameplayAbilityTargetData_SingleTargetHit* NewTargetData = new FHakGameplayAbilityTargetData_SingleTargetHit();
-			NewTargetData->HitResult = FoundHit;
-			NewTargetData->CartridgeID = CartridgeID;
-			TargetData.Add(NewTargetData);
-		}
-	}
-
-	OnTargetDataReadyCallback(TargetData, FGameplayTag());
-}
 
 void ULyraCloneGameplayAbility_RangedWeapon::PerformLocalTargeting(TArray<FHitResult>& OutHits)
 {
@@ -147,7 +119,7 @@ FHitResult ULyraCloneGameplayAbility_RangedWeapon::DoSingleBulletTrace(const FVe
 	return Impact;
 }
 
-int32 ULyraCloneGameplayAbility_RangedWeapon::FindFirstPawnHitResult(const TArray<FHitResult>& HitResults)
+int32 ULyraCloneGameplayAbility_RangedWeapon::FindFirstPawnHitResult(const TArray<FHitResult> &HitResults) const
 {
 	for (int32 Idx = 0; Idx < HitResults.Num(); ++Idx)
 	{
@@ -229,9 +201,69 @@ ECollisionChannel ULyraCloneGameplayAbility_RangedWeapon::DetermineTraceChannel(
 	return LyraClone_TraceChannel_Weapon;
 }
 
+void ULyraCloneGameplayAbility_RangedWeapon::OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& InData, FGameplayTag ApplicationTag)
+{
+	UAbilitySystemComponent* MyAbilitySystemComponent = CurrentActorInfo->AbilitySystemComponent.Get();
+	check(MyAbilitySystemComponent);
+
+	if (const FGameplayAbilitySpec* AbilitySpec = MyAbilitySystemComponent->FindAbilitySpecFromHandle(CurrentSpecHandle))
+	{
+		FGameplayAbilityTargetDataHandle LocalTargetDataHandle(MoveTemp(const_cast<FGameplayAbilityTargetDataHandle&>(InData)));
+		if (CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo))
+		{
+			OnRangeWeaponTargetDataReady(LocalTargetDataHandle);
+		}
+		else
+		{
+			K2_EndAbility();
+		}
+	}
+}
+
+void ULyraCloneGameplayAbility_RangedWeapon::StartRangedWeaponTargeting()
+{
+	check(CurrentActorInfo);
+
+	AActor* AvatarActor = CurrentActorInfo->AvatarActor.Get();
+	check(AvatarActor);
+
+	UAbilitySystemComponent* MyAbilityComponent = CurrentActorInfo->AbilitySystemComponent.Get();
+	check(MyAbilityComponent);
+
+	TArray<FHitResult> FoundHits;
+	PerformLocalTargeting(FoundHits);
+
+	FGameplayAbilityTargetDataHandle TargetData;
+	TargetData.UniqueId = 0;
+
+	if (FoundHits.Num() > 0)
+	{
+		const int32 CartridgeID = FMath::Rand();
+		for (const FHitResult& FoundHit : FoundHits)
+		{
+			FLyraCloneGameplayAbilityTargetData_SingleTargetHit* NewTargetData = new FLyraCloneGameplayAbilityTargetData_SingleTargetHit();
+			NewTargetData->HitResult = FoundHit;
+			NewTargetData->CartridgeID = CartridgeID;
+			TargetData.Add(NewTargetData);
+		}
+	}
+
+	OnTargetDataReadyCallback(TargetData, FGameplayTag());
+}
+
+ULyraCloneEquipmentInstance* ULyraCloneGameplayAbility_RangedWeapon::GetAssociatedEquipment() const
+{
+	if (FGameplayAbilitySpec* Spec = UGameplayAbility::GetCurrentAbilitySpec())
+	{
+		return Cast<ULyraCloneEquipmentInstance>(Spec->SourceObject.Get());
+	}
+
+	return nullptr;
+}
+
 ULyraCloneRangedWeaponInstance* ULyraCloneGameplayAbility_RangedWeapon::GetWeaponInstance()
 {
-	return Cast<ULyraCloneRangedWeaponInstance>(GetAssosiatedEquipment());
+	return Cast<ULyraCloneRangedWeaponInstance>(GetAssociatedEquipment());
 }
 
 FVector ULyraCloneGameplayAbility_RangedWeapon::GetWeaponTargetingSourceLocation() const
@@ -270,7 +302,7 @@ FTransform ULyraCloneGameplayAbility_RangedWeapon::GetTargetingTransform(APawn* 
 	const FVector WeaponLoc = GetWeaponTargetingSourceLocation();
 	FVector FinalCamLoc = FocalLoc + (((WeaponLoc - FocalLoc) | AimDir) * AimDir);
 
-#if 0
+#if 1
 	{
 		DrawDebugPoint(GetWorld(), WeaponLoc, 10.0f, FColor::Red, false, 60.0f);
 		DrawDebugPoint(GetWorld(), CamLoc, 10.0f, FColor::Yellow, false, 60.0f);

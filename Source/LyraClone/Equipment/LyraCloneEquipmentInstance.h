@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Equipment, meta = (DeterminesOutputType = PawnType))
 	APawn* GetTypedPawn(TSubclassOf<APawn> PawnType) const;
 
+	UFUNCTION(BlueprintPure, Category = Equipment)
+	TArray<AActor*> GetSpawnedActors() const { return SpawnedActors; }
+
 	/** 어떤 InventoryItemInstance에 의해 활성화되었는지 (추후 QuickBarComponent에서 보게될 것) */
 	UPROPERTY()
 	TObjectPtr<UObject> Instigator;

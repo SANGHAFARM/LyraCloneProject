@@ -1,12 +1,32 @@
 #include "LyraCloneAbilitySystemComponent.h"
 
 #include "Abilities/LyraCloneGameplayAbility.h"
+#include "LyraClone/Animation/LyraCloneAnimInstance.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneAbilitySystemComponent)
 
 ULyraCloneAbilitySystemComponent::ULyraCloneAbilitySystemComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+}
+
+void ULyraCloneAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
+{
+	FGameplayAbilityActorInfo* ActorInfo = AbilityActorInfo.Get();
+	check(ActorInfo);
+	check(InOwnerActor);
+
+	const bool bHasNewPawnAvatar = Cast<APawn>(InAvatarActor) && (InAvatarActor != ActorInfo->AvatarActor);
+
+	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
+
+	if (bHasNewPawnAvatar)
+	{
+		if (ULyraCloneAnimInstance* LyraAnimInst = Cast<ULyraCloneAnimInstance>(ActorInfo->GetAnimInstance()))
+		{
+			LyraAnimInst->InitializeWithAbilitySystem(this);
+		}
+	}
 }
 
 void ULyraCloneAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)

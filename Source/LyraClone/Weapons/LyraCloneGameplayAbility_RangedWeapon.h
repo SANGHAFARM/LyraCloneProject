@@ -33,22 +33,28 @@ public:
 
 	ULyraCloneGameplayAbility_RangedWeapon(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-	UFUNCTION(BlueprintCallable)
-	void StartRangedWeaponTargeting();
-
 	void PerformLocalTargeting(TArray<FHitResult>& OutHits);
 
 	void TraceBulletsInCartridge(const FRangedWeaponFiringInput& InputData, TArray<FHitResult>& OutHits);
 
 	FHitResult DoSingleBulletTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHits) const;
 
-	int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults);
+	int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults) const;
 
 	FHitResult WeaponTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHitResults) const;
 
 	void AddAdditionalTraceIgnoreActors(FCollisionQueryParams& TraceParams) const;
 	ECollisionChannel DetermineTraceChannel(FCollisionQueryParams& TraceParams, bool bIsSimulated) const;
 
+	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& InData, FGameplayTag ApplicationTag);
+
+	UFUNCTION(BlueprintCallable)
+	void StartRangedWeaponTargeting();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRangeWeaponTargetDataReady(const FGameplayAbilityTargetDataHandle& TargetData);
+
+	ULyraCloneEquipmentInstance* GetAssociatedEquipment() const;
 	ULyraCloneRangedWeaponInstance* GetWeaponInstance();
 	FVector GetWeaponTargetingSourceLocation() const;
 	FTransform GetTargetingTransform(APawn* SourcePawn, ELyraCloneAbilityTargetingSource Source);

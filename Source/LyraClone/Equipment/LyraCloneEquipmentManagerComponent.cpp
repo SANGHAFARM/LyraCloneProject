@@ -36,6 +36,22 @@ void ULyraCloneEquipmentManagerComponent::UnequipItem(ULyraCloneEquipmentInstanc
 	}
 }
 
+TArray<ULyraCloneEquipmentInstance*> ULyraCloneEquipmentManagerComponent::GetEquipmentInstancesOfType(TSubclassOf<ULyraCloneEquipmentInstance> InstanceType) const
+{
+	TArray<ULyraCloneEquipmentInstance*> Results;
+
+	for (const FLyraCloneAppliedEquipmentEntry& Entry : EquipmentList.Entries)
+	{
+		if (ULyraCloneEquipmentInstance* Instance = Entry.Instance)
+		{
+			if (Instance->IsA(InstanceType))
+				Results.Add(Instance);
+		}			
+	}		
+
+	return Results;
+}
+
 ULyraCloneEquipmentInstance* FLyraCloneEquipmentList::AddEntry(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition)
 {
 	ULyraCloneEquipmentInstance* Result = nullptr;

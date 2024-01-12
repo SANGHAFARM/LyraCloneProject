@@ -21,6 +21,15 @@ void ALyraClonePlayerState::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	check(AbilitySystemComponent);
+	{
+		FGameplayAbilityActorInfo* ActorInfo = AbilitySystemComponent->AbilityActorInfo.Get();
+		check(ActorInfo->OwnerActor == this);
+		check(ActorInfo->OwnerActor == ActorInfo->AvatarActor);
+	}
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, GetPawn());
+
 	const AGameStateBase* GameState = GetWorld()->GetGameState();
 	check(GameState);
 
